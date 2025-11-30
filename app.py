@@ -1,9 +1,9 @@
-# app.py - FINAL VERSION (No warnings + Click-to-append works perfectly)
+# app.py - FINAL VERSION WITH DEVELOPER CARD
 import os
 import warnings
 import logging
 
-# Kill ALL TensorFlow/Keras/absl warnings
+# Kill ALL warnings
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 logging.getLogger('tensorflow').setLevel(logging.ERROR)
@@ -40,17 +40,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================
-# Initialize session state
+# Session State
 # ============================
 if "text" not in st.session_state:
     st.session_state.text = "the quick brown"
 
 # ============================
-# Load Model (silently)
+# Load Model
 # ============================
-@st.cache_resource(show_spinner="Loading the AI model...")
+@st.cache_resource(show_spinner="Loading the AI brain...")
 def load_artifacts():
-    model = load_model("my_model.h5", compile=False)  # compile=False → no absl warning
+    model = load_model("my_model.h5", compile=False)
     with open("tokenizer.pickle", "rb") as f:
         tokenizer = pickle.load(f)
     return model, tokenizer
@@ -74,62 +74,94 @@ def predict_top_k(input_text, top_k=5, max_sequence_len=20):
             results.append((word, round(probs[i]*100, 2)))
     return results
 
-MAX_SEQUENCE_LEN = 20  # Change if your model used different length
+MAX_SEQUENCE_LEN = 20
 
 # ============================
-# UI
+# Main UI
 # ============================
 st.markdown("<h1 class='title'>Next Word Predictor</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subtitle'>Type and click any suggestion to continue!</p>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>Type anything and let AI complete your thoughts!</p>", unsafe_allow_html=True)
 
-# Text input (uses st.session_state.text)
 user_input = st.text_input(
-    "Start typing...",
+    "Start typing here...",
     value=st.session_state.text,
-    placeholder="e.g. once upon a",
+    placeholder="e.g. once upon a time",
     key="input_box"
 )
 
-# Update session state when user types
 if user_input != st.session_state.text:
     st.session_state.text = user_input
 
-# Predict button (or auto-predict on input)
 if st.button("Predict Next Words", type="primary", use_container_width=True) or st.session_state.text.strip():
     predictions = predict_top_k(st.session_state.text, top_k=5, max_sequence_len=MAX_SEQUENCE_LEN)
 
     if predictions:
         st.markdown("<div class='prediction-box'>", unsafe_allow_html=True)
-        st.markdown("### Click a word to add it:")
-        
+        st.markdown("### Click any word to continue:")
         cols = st.columns(len(predictions))
         for i, (word, prob) in enumerate(predictions):
             with cols[i]:
                 if st.button(f"**{word}**\n{prob}%", key=f"suggest_{i}", use_container_width=True):
                     st.session_state.text += " " + word
-                    st.rerun()  # Refresh to show updated text
-        
+                    st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
         best = predictions[0][0]
         st.success(f"**Best next word:** `{best}` → **{st.session_state.text} {best}**")
     else:
-        st.info("No strong prediction. Try more words!")
+        st.info("No strong prediction yet. Try adding more words!")
 
 # ============================
-# Sidebar Info
+# Sidebar - Model Info + Developer Card
 # ============================
 with st.sidebar:
-    st.header("Model Info")
+    st.markdown("### Model Information")
     st.success("Model loaded successfully!")
-    st.write(f"**Tokenizer Vocabulary:** {len(tokenizer.word_index):,}")
+    st.write(f"**Vocabulary Size:** {len(tokenizer.word_index):,}")
     st.write(f"**Max Sequence Length:** {MAX_SEQUENCE_LEN}")
-    
-    st.divider()
-    st.caption("Built with ❤️ using:")
-    st.write("- TensorFlow / Keras")
-    st.write("- Streamlit")
-    st.write("- LSTM Neural Network")
-    
-st.markdown("---")
-st.caption("Next Word Predictor • LSTM • Built with Streamlit + TensorFlow")
+    st.write(f"**Architecture:** Bidirectional LSTM")
+    st.caption("Zero warnings • Super fast • Professional deployment")
+
+    st.markdown("---")
+
+    # === YOUR DEVELOPER CARD IN SIDEBAR ===
+    st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        padding: 1.6rem;
+        border-radius: 18px;
+        border: 1.5px solid rgba(255,255,255,0.4);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        margin: 20px 0;
+        text-align: center;
+    ">
+        <h3 style="color:white; margin:0 0 12px 0; font-size:1.6rem;">Developer</h3>
+        <p style="color:#f0f0f0; font-size:1.1rem; line-height:1.6; margin:8px 0;">
+            <strong style="font-size:1.35rem; color:#FFD700;">ASAD AZIZ</strong><br>
+            BS Artificial Intelligence Student<br>
+            AI Enthusiast • NLP • Deep Learning
+        </p>
+        <div style="margin-top:15px;">
+            <a href="https://github.com/Asad-Aziz-001" target="_blank">
+                <button style="
+                    background:#333; color:white; padding:9px 18px; border-radius:12px; 
+                    border:none; cursor:pointer; margin:5px; font-weight:bold; font-size:0.95rem;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:0.3s;
+                ">GitHub</button>
+            </a>
+            <a href="https://www.linkedin.com/in/asad-aziz-140p" target="_blank">
+                <button style="
+                    background:#0A66C2; color:white; padding:9px 18px; border-radius:12px; 
+                    border:none; cursor:pointer; margin:5px; font-weight:bold; font-size:0.95rem;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:0.3s;
+                ">LinkedIn</button>
+            </a>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ============================
+# Footer
+# ============================
+st.markdown("<br><p style='text-align:center; color:#aaa; font-size:0.9rem;'>Made with ❤️ using Streamlit • LSTM • TensorFlow</p>", unsafe_allow_html=True)
