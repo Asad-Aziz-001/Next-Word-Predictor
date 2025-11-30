@@ -32,7 +32,7 @@
 ---
 
 ### Live Demo
-[Try it instantly!](https://your-app-name.streamlit.app)
+[Try it instantly!](https://next-word-predictor-msaqiipdsdagyyf2b8ab5e.streamlit.app/)
 
 ---
 
@@ -141,8 +141,8 @@ streamlit run app.py
 
 ### Author  
 **Your Name**  
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?logo=github)](https://github.com/yourusername)  
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin)](https://linkedin.com/in/yourprofile)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?logo=github)](https://github.com/Asad-Aziz-001)  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin)](https://www.linkedin.com/in/asad-aziz-140p)
 
 <p align="center">
   <br>
