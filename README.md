@@ -32,7 +32,7 @@
 ---
 
 ### Live Demo
-[Try it instantly!](https://next-word-predictor-msaqiipdsdagyyf2b8ab5e.streamlit.app/)
+[Try it instantly!](https://next-word-predictor-001.streamlit.app/)
 
 ---
 
